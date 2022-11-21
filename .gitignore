@@ -1,5 +1,5 @@
 .vscode
-main
+/main
 .gitignore
-logs
-go.sum
+/logs
+/go.sum
