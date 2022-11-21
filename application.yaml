@@ -11,4 +11,4 @@ modules:
       mode: day
 gruops:
   - 177056275
-proxy: "http://127.0.0.1:10809"  
+proxy: "http://127.0.0.1:10809" 

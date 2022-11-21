@@ -2,7 +2,6 @@ package pixiv
 
 import (
 	"fmt"
-	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -16,39 +15,42 @@ import (
 )
 
 func init() {
-	instance := &Pixiv{}
+	instance := &pixiv{}
 	bot.RegisterModule(instance)
 }
 
-type Pixiv struct {
+type pixiv struct {
 }
 
-func (m *Pixiv) MiraiGoModule() bot.ModuleInfo {
+func (m *pixiv) MiraiGoModule() bot.ModuleInfo {
 	return bot.ModuleInfo{
 		ID:       "lurendie.pixiv",
 		Instance: instance,
 	}
 }
 
-func (m *Pixiv) Init() {
+func (m *pixiv) Init() {
 	// 初始化过程
 	// 在此处可以进行 Module 的初始化配置
 	// 如配置读取
-
+	viper.SetConfigFile("application.yaml")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	viper.ReadInConfig()
 }
 
-func (m *Pixiv) PostInit() {
+func (m *pixiv) PostInit() {
 	// 第二次初始化
 	// 再次过程中可以进行跨Module的动作
 	// 如通用数据库等等
 }
 
-func (m *Pixiv) Serve(b *bot.Bot) {
+func (m *pixiv) Serve(b *bot.Bot) {
 	// 注册服务函数部分
 	register(b)
 }
 
-func (m *Pixiv) Start(b *bot.Bot) {
+func (m *pixiv) Start(b *bot.Bot) {
 	// 此函数会新开携程进行调用
 	// ```go
 	// 		go exampleModule.Start()
@@ -58,7 +60,7 @@ func (m *Pixiv) Start(b *bot.Bot) {
 	// 如http服务器等等
 }
 
-func (m *Pixiv) Stop(b *bot.Bot, wg *sync.WaitGroup) {
+func (m *pixiv) Stop(b *bot.Bot, wg *sync.WaitGroup) {
 	// 别忘了解锁
 	defer wg.Done()
 	// 结束部分
@@ -67,46 +69,46 @@ func (m *Pixiv) Stop(b *bot.Bot, wg *sync.WaitGroup) {
 	// 在此处应该释放相应的资源或者对状态进行保存
 }
 
-var instance *Pixiv
+var instance *pixiv
 
-var PixivLogger = utils.GetModuleLogger("pixiv")
+var pixivLogger = utils.GetModuleLogger("pixiv")
 
 func register(b *bot.Bot) {
 	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
-		for _, v := range viper.GetStringSlice("gruops") {
-			code, _ := strconv.ParseInt(v, 10, 64)
-			if event.GroupCode == code {
+		//gruopCode := strconv.FormatInt(event.GroupCode, 10)
+		for _, v := range viper.GetIntSlice("gruops") {
+			if int(event.GroupCode) == v {
 				if event.ToString() == "功能" {
-					PixivLogger.Info("'功能'关键词触发")
+					pixivLogger.Info("'功能'关键词触发")
 					menu := "====菜单====\n1.排行\n2.查看图片<PID>\n3.查看画师<UID>\n4.以图搜图<图片>"
 					m := message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n")).Append(message.NewText(menu))
-					client.SendGroupMessage(code, m)
+					client.SendGroupMessage(event.GroupCode, m)
 					return
 				} else if event.ToString() == "排行" {
-					PixivLogger.Info("'排行'关键词触发")
+					pixivLogger.Info("'排行'关键词触发")
 					m := Top50(client, event)
-					client.SendGroupMessage(code, m)
+					client.SendGroupMessage(event.GroupCode, m)
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看图片") {
 					m := ShowIllust(client, event, event.ToString()[12:])
-					client.SendGroupMessage(code, m)
+					client.SendGroupMessage(event.GroupCode, m)
 					return
 				} else if event.ToString() == "涩图" {
-					PixivLogger.Info("'涩图'关键词触发")
+					pixivLogger.Info("'涩图'关键词触发")
 					m := setu(client, event)
 					client.SendPrivateMessage(event.Sender.Uin, m)
-					client.SendGroupMessage(code, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n已发送")))
+					client.SendGroupMessage(event.GroupCode, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n已发送")))
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看画师") {
-					PixivLogger.Info("'查看画师'关键词触发")
+					pixivLogger.Info("'查看画师'关键词触发")
 					m := ShowUser(client, event, event.ToString()[12:])
-					client.SendGroupMessage(code, m)
+					client.SendGroupMessage(event.GroupCode, m)
 					return
 				} else if strings.HasPrefix(event.ToString(), "以图搜图") {
-					PixivLogger.Info("'以图搜图'关键词触发")
+					pixivLogger.Info("'以图搜图'关键词触发")
 					imgURL := event.Elements[1].(*message.GroupImageElement).Url
 					m := searchImg(client, event, imgURL)
-					client.SendGroupMessage(code, m)
+					client.SendGroupMessage(event.GroupCode, m)
 					return
 				}
 			}
@@ -136,7 +138,7 @@ func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Se
 			sendMsg.Append(message.NewText(makes)).Append(img)
 		}
 	} else {
-		PixivLogger.Error("一个数据都没有咋回事小老弟?(API)")
+		pixivLogger.Error("一个数据都没有咋回事小老弟?(API)")
 		sendMsg.Append(message.NewText("获取数据失败!,等稍后再试...\n"))
 	}
 	sendMsg.Append(message.NewText("PS:排名不是实时更新!"))

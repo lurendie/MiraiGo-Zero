@@ -3,7 +3,7 @@ package wzry
 import (
 	"fmt"
 	"miraiGoDo/modules/pixiv"
-	"strconv"
+	"net/url"
 	"strings"
 	"sync"
 
@@ -34,6 +34,10 @@ func (m *wzry) Init() {
 	// 初始化过程
 	// 在此处可以进行 Module 的初始化配置
 	// 如配置读取
+	viper.SetConfigFile("application.yaml")
+	viper.SetConfigType("yaml")
+	viper.AddConfigPath(".")
+	viper.ReadInConfig()
 }
 
 func (m *wzry) PostInit() {
@@ -68,14 +72,14 @@ func (m *wzry) Stop(b *bot.Bot, wg *sync.WaitGroup) {
 
 var instance *wzry
 
-var PixivLogger = utils.GetModuleLogger("wzry")
+var wzryLogger = utils.GetModuleLogger("wzry")
 
 func register(b *bot.Bot) {
 	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
-		gruopCode := strconv.FormatInt(event.GroupCode, 10)
-		for _, v := range viper.GetStringSlice("groups") {
-			if gruopCode == v {
+		for _, v := range viper.GetIntSlice("gruops") {
+			if event.GroupCode == int64(v) {
 				if strings.HasPrefix(event.ToString(), "查询战力") {
+					wzryLogger.Info("查询战力触发")
 					m := searchAtk(client, event)
 					client.SendGroupMessage(event.GroupCode, m)
 					return
@@ -91,8 +95,10 @@ func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *messag
 	heroName := arr[1]
 	zone := getType(arr[2])
 	m := message.NewSendingMessage()
-	url := fmt.Sprintf(API_URL, token, heroName, zone)
-	response := pixiv.RequestJson(url, pixiv.GET)
+	URL := fmt.Sprintf(API_URL, token, url.QueryEscape(heroName), zone)
+	fmt.Printf("url: %v\n", URL)
+	response := pixiv.RequestJson(URL, pixiv.GET)
+	fmt.Printf("response: %v\n", response)
 	//区标
 	area := response["area"].(map[string]interface{})
 	//市区
@@ -109,11 +115,11 @@ func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *messag
 }
 
 func getType(t string) string {
-	if t == "安卓qq" {
+	if t == "安卓QQ" {
 		return Zone.qq
 	} else if t == "安卓微信" {
 		return Zone.wx
-	} else if t == "苹果qq" {
+	} else if t == "苹果QQ" {
 		return Zone.ios_qq
 	} else if t == "苹果微信" {
 		return Zone.ios_wx

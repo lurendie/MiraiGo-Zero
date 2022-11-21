@@ -75,7 +75,7 @@ func makeImage(read io.Reader, c *miraiGoCli.QQClient, groupCode int64, msgtype 
 
 	}
 	if img == nil {
-		PixivLogger.Error("图片上传服务器错误导致无法在QQ显示!!!")
+		pixivLogger.Error("图片上传服务器错误导致无法在QQ显示!!!")
 		return nil
 	}
 	return img

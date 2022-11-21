@@ -5,6 +5,7 @@ import (
 	"os/signal"
 
 	_ "miraiGoDo/modules/pixiv"
+	_ "miraiGoDo/modules/wzry"
 
 	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/config"

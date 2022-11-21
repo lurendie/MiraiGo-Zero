@@ -27,7 +27,7 @@ var (
 	//涩图
 	SetuURL = "https://api.acgmx.com/public/setu"
 	//画师
-	UserURL = "https://api.acgmx.com/public/search/users/illusts?id=%v&offset=30"
+	UserURL = "https://api.acgmx.com/public/search/users/illusts?id=%v"
 	//以图搜图KEY
 	API_KEY = "4f8076a50dfd9964a6b6a0f5dd49c44ef730cc76"
 	//以图搜图
