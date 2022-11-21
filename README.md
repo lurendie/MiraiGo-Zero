@@ -1,6 +1,6 @@
 # MiraiGo-zero
 
-基于MiraiGo-Template基础之上进行开发
+基于MiraiGo-Template Mod基础之上进行开发
 
 # 功能
 

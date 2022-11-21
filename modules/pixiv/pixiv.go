@@ -1,16 +1,15 @@
 package pixiv
 
 import (
-	"encoding/json"
 	"fmt"
-	"io"
-	"os"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
 
 	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
+	"github.com/spf13/viper"
 
 	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/utils"
@@ -36,17 +35,6 @@ func (m *Pixiv) Init() {
 	// 在此处可以进行 Module 的初始化配置
 	// 如配置读取
 
-	jsonFile, err := os.Open("config/pixiv.json")
-	if err != nil {
-		fmt.Println("error opening json file")
-	}
-	defer jsonFile.Close()
-
-	jsonData, err := io.ReadAll(jsonFile)
-	if err != nil {
-		fmt.Println("error reading json file")
-	}
-	json.Unmarshal(jsonData, &config)
 }
 
 func (m *Pixiv) PostInit() {
@@ -85,39 +73,40 @@ var PixivLogger = utils.GetModuleLogger("pixiv")
 
 func register(b *bot.Bot) {
 	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
-		for _, v := range config.Groups {
-			if event.GroupCode == v {
-				if event.ToString() == "菜单" {
-					PixivLogger.Info("'菜单'关键词触发")
+		for _, v := range viper.GetStringSlice("gruops") {
+			code, _ := strconv.ParseInt(v, 10, 64)
+			if event.GroupCode == code {
+				if event.ToString() == "功能" {
+					PixivLogger.Info("'功能'关键词触发")
 					menu := "====菜单====\n1.排行\n2.查看图片<PID>\n3.查看画师<UID>\n4.以图搜图<图片>"
 					m := message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n")).Append(message.NewText(menu))
-					client.SendGroupMessage(v, m)
+					client.SendGroupMessage(code, m)
 					return
 				} else if event.ToString() == "排行" {
 					PixivLogger.Info("'排行'关键词触发")
 					m := Top50(client, event)
-					client.SendGroupMessage(v, m)
+					client.SendGroupMessage(code, m)
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看图片") {
 					m := ShowIllust(client, event, event.ToString()[12:])
-					client.SendGroupMessage(v, m)
+					client.SendGroupMessage(code, m)
 					return
 				} else if event.ToString() == "涩图" {
 					PixivLogger.Info("'涩图'关键词触发")
 					m := setu(client, event)
 					client.SendPrivateMessage(event.Sender.Uin, m)
-					client.SendGroupMessage(v, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n已发送")))
+					client.SendGroupMessage(code, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n已发送")))
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看画师") {
 					PixivLogger.Info("'查看画师'关键词触发")
 					m := ShowUser(client, event, event.ToString()[12:])
-					client.SendGroupMessage(v, m)
+					client.SendGroupMessage(code, m)
 					return
 				} else if strings.HasPrefix(event.ToString(), "以图搜图") {
 					PixivLogger.Info("'以图搜图'关键词触发")
 					imgURL := event.Elements[1].(*message.GroupImageElement).Url
 					m := searchImg(client, event, imgURL)
-					client.SendGroupMessage(v, m)
+					client.SendGroupMessage(code, m)
 					return
 				}
 			}
@@ -211,6 +200,6 @@ func searchImg(client *miraiGoCli.QQClient, event *message.GroupMessage, url str
 	//原图链接
 	ext_urls := responseJson["results"].([]interface{})[0].(map[string]interface{})["data"].(map[string]interface{})["ext_urls"].([]interface{})[0].(string)
 	img := makeImage(RequestImg(thumbnail, GET), client, event.GroupCode, Group)
-	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n标题:" + title + "\n匹配度:" + similarity)).Append(img).Append(message.NewText("\n链接:" + ext_urls))
+	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n标题:" + title + "\n匹配度:" + similarity)).Append(img).Append(message.NewText("\n原图链接:" + ext_urls))
 	return sendMsg
 }
