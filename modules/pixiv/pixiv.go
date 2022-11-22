@@ -6,6 +6,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/Logiase/MiraiGo-Template/config"
 	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/spf13/viper"
@@ -76,7 +77,7 @@ var pixivLogger = utils.GetModuleLogger("pixiv")
 func register(b *bot.Bot) {
 	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
 		//gruopCode := strconv.FormatInt(event.GroupCode, 10)
-		for _, v := range viper.GetIntSlice("gruops") {
+		for _, v := range config.GlobalConfig.GetIntSlice("gruops") {
 			if int(event.GroupCode) == v {
 				if event.ToString() == "功能" {
 					pixivLogger.Info("'功能'关键词触发")

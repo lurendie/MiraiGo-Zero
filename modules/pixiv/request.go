@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/url"
 
+	"github.com/Logiase/MiraiGo-Template/config"
 	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 )
@@ -43,10 +44,10 @@ func RequestJson(url string, method string) map[string]interface{} {
 
 func init() {
 	//设置代理初始化请求头
-	if config.Proxy == "" {
+	if config.GlobalConfig.GetString("proxy") == "" {
 		cli = &http.Client{Timeout: 0}
 	} else {
-		proxyURL, error := url.Parse(config.Proxy)
+		proxyURL, error := url.Parse(config.GlobalConfig.GetString("proxy"))
 		if error != nil {
 			fmt.Println("代理转换异常!!")
 		}

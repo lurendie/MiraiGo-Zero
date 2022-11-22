@@ -34,10 +34,6 @@ func (m *wzry) Init() {
 	// 初始化过程
 	// 在此处可以进行 Module 的初始化配置
 	// 如配置读取
-	viper.SetConfigFile("application.yaml")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.ReadInConfig()
 }
 
 func (m *wzry) PostInit() {

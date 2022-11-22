@@ -8,15 +8,6 @@ const (
 	Private   = 0
 )
 
-var config pixivConfig
-
-// 全局配置结构体
-type pixivConfig struct {
-	Master int64   `json:"master"`
-	Groups []int64 `json:"groups"`
-	Proxy  string  `json:"proxy"`
-}
-
 var (
 	//图片
 	IllustURL = "https://api.acgmx.com/illusts/detail?illustId=%v"
