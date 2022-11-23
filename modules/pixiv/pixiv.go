@@ -98,7 +98,7 @@ func register(b *bot.Bot) {
 					pixivLogger.Info("'涩图'关键词触发")
 					m := setu(client, event)
 					client.SendPrivateMessage(event.Sender.Uin, m)
-					client.SendGroupMessage(event.GroupCode, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n已发送")))
+					client.SendGroupMessage(event.GroupCode, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n不可以涩涩哦!")))
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看画师") {
 					pixivLogger.Info("'查看画师'关键词触发")
@@ -179,14 +179,12 @@ func ShowUser(client *miraiGoCli.QQClient, event *message.GroupMessage, userId s
 func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	illust := RequestJson(SetuURL, GET)
-	illustID := illust["data"].(map[string]interface{})["illust"].(string)
-	original := illust["data"].(map[string]interface{})["originals"].([]interface{})
+	illustID := illust["data"].([]interface{})[0].(map[string]interface{})["pid"]
+	original := illust["data"].([]interface{})[0].(map[string]interface{})["urls"].(map[string]interface{})["original"].(string)
 	sendMsg.Append(message.NewText(fmt.Sprintf("PID:%v\n", illustID)))
-	for _, v := range original {
-		imgData := RequestImg(fmt.Sprintf(v.(map[string]interface{})["url"].(string)), GET)
-		img := makeImage(imgData, client, event.Sender.Uin, Private)
-		sendMsg.Append(img)
-	}
+	imgData := RequestImg(original, GET)
+	img := makeImage(imgData, client, event.Sender.Uin, Private)
+	sendMsg.Append(img)
 	return sendMsg
 }
 
