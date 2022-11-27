@@ -4,6 +4,7 @@ import (
 	"os"
 	"os/signal"
 
+	_ "miraiGoDo/modules/master"
 	"miraiGoDo/modules/pixiv"
 	_ "miraiGoDo/modules/pixiv"
 	_ "miraiGoDo/modules/wzry"

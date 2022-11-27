@@ -104,7 +104,7 @@ func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *messag
 	server := response["server"].(string)
 	name := response["name"].(string)
 	updatetime := response["updatetime"]
-	make := fmt.Sprintf("服务器:%s\n省标:\n%s-%s\n市标:\n%s-%s\n区标:\n%s-%s\n最后更新时间:%v", server, area["name"], area["power"], city["name"], city["power"], province["name"], province["power"], updatetime)
+	make := fmt.Sprintf("服务器:%s\n省标:\n%s-%s\n市标:\n%s-%s\n区标:\n%s-%s\n最后更新时间:%v", server, province["name"], province["power"], city["name"], city["power"], area["name"], area["power"], updatetime)
 	m.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n英雄名称:" + name + "\n")).Append(message.NewText(make))
 	return m
 

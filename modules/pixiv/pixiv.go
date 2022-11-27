@@ -181,7 +181,7 @@ func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Sen
 	illust := RequestJson(SetuURL, GET)
 	illustID := illust["data"].([]interface{})[0].(map[string]interface{})["pid"]
 	original := illust["data"].([]interface{})[0].(map[string]interface{})["urls"].(map[string]interface{})["original"].(string)
-	sendMsg.Append(message.NewText(fmt.Sprintf("PID:%v\n", illustID)))
+	sendMsg.Append(message.NewText(fmt.Sprintf("PID:%1.0f\n", illustID)))
 	imgData := RequestImg(original, GET)
 	img := makeImage(imgData, client, event.Sender.Uin, Private)
 	sendMsg.Append(img)
