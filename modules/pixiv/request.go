@@ -61,23 +61,20 @@ func Init() {
 
 // 将图片数据上传QQ服务器并生成Message类型
 func makeImage(read io.Reader, c *miraiGoCli.QQClient, groupCode int64, msgtype int) message.IMessageElement {
-
 	imageData, e1 := io.ReadAll(read)
 	if e1 != nil {
 		fmt.Printf("e1: %v\n", e1)
 	}
 	dataBuffer := bytes.NewReader(imageData)
 	var img message.IMessageElement
+	var err error
 	if msgtype == 0 {
-		img, _ = c.UploadImage(message.Source{SourceType: message.SourcePrivate, PrimaryID: groupCode}, dataBuffer)
-
+		img, err = c.UploadImage(message.Source{SourceType: message.SourcePrivate, PrimaryID: groupCode}, dataBuffer)
 	} else {
-		img, _ = c.UploadImage(message.Source{SourceType: message.SourceGroup, PrimaryID: groupCode}, dataBuffer)
-
+		img, err = c.UploadImage(message.Source{SourceType: message.SourceGroup, PrimaryID: groupCode}, dataBuffer)
 	}
-	if img == nil {
-		pixivLogger.Error("图片上传服务器错误导致无法在QQ显示!!!")
-		return nil
+	if err != nil {
+		fmt.Printf("上传群图片失败: %v\n", err)
 	}
 	return img
 }

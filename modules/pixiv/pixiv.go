@@ -97,7 +97,7 @@ func register(b *bot.Bot) {
 				} else if event.ToString() == "涩图" {
 					pixivLogger.Info("'涩图'关键词触发")
 					m := setu(client, event)
-					client.SendPrivateMessage(event.Sender.Uin, m)
+					client.SendGroupTempMessage(event.GroupCode, event.Sender.Uin, m)
 					client.SendGroupMessage(event.GroupCode, message.NewSendingMessage().Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n不可以涩涩哦!")))
 					return
 				} else if strings.HasPrefix(event.ToString(), "查看画师") {

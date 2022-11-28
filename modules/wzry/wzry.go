@@ -113,11 +113,11 @@ func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *messag
 func getType(t string) string {
 	if t == "安卓QQ" {
 		return Zone.qq
-	} else if t == "安卓微信" {
+	} else if t == "安卓WX" {
 		return Zone.wx
 	} else if t == "苹果QQ" {
 		return Zone.ios_qq
-	} else if t == "苹果微信" {
+	} else if t == "苹果WX" {
 		return Zone.ios_wx
 	}
 	return ""
