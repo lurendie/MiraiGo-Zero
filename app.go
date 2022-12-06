@@ -5,7 +5,6 @@ import (
 	"os/signal"
 
 	_ "miraiGoDo/modules/master"
-	"miraiGoDo/modules/pixiv"
 	_ "miraiGoDo/modules/pixiv"
 	_ "miraiGoDo/modules/wzry"
 
@@ -18,8 +17,6 @@ import (
 func init() {
 	utils.WriteLogToFS(utils.LogInfoLevel, utils.LogWithStack, utils.LogDebugLevel)
 	config.Init()
-	//请求头代初始化
-	pixiv.Init()
 }
 
 func main() {

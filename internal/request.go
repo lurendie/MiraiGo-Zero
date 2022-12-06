@@ -1,4 +1,4 @@
-package pixiv
+package internal
 
 import (
 	"bytes"
@@ -14,6 +14,14 @@ import (
 )
 
 var cli *http.Client
+
+const (
+	UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24"
+	POST      = "POST"
+	GET       = "GET"
+	Group     = 1
+	Private   = 0
+)
 
 // 根据图片URL返回图片二进制数据
 func RequestImg(url string, method string) io.ReadCloser {
@@ -42,7 +50,7 @@ func RequestJson(url string, method string) map[string]interface{} {
 	return j
 }
 
-func Init() {
+func init() {
 	//设置代理初始化请求头
 	if config.GlobalConfig.Get("proxy") == nil {
 		cli = &http.Client{Timeout: 0}
@@ -60,7 +68,7 @@ func Init() {
 }
 
 // 将图片数据上传QQ服务器并生成Message类型
-func makeImage(read io.Reader, c *miraiGoCli.QQClient, groupCode int64, msgtype int) message.IMessageElement {
+func MakeImage(read io.Reader, c *miraiGoCli.QQClient, groupCode int64, msgtype int) message.IMessageElement {
 	imageData, e1 := io.ReadAll(read)
 	if e1 != nil {
 		fmt.Printf("e1: %v\n", e1)

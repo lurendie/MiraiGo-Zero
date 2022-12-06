@@ -2,7 +2,7 @@ package wzry
 
 import (
 	"fmt"
-	"miraiGoDo/modules/pixiv"
+	"miraiGoDo/internal"
 	"net/url"
 	"strings"
 	"sync"
@@ -93,7 +93,7 @@ func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *messag
 	m := message.NewSendingMessage()
 	URL := fmt.Sprintf(API_URL, token, url.QueryEscape(heroName), zone)
 	fmt.Printf("url: %v\n", URL)
-	response := pixiv.RequestJson(URL, pixiv.GET)
+	response := internal.RequestJson(URL, internal.GET)
 	fmt.Printf("response: %v\n", response)
 	//区标
 	area := response["area"].(map[string]interface{})

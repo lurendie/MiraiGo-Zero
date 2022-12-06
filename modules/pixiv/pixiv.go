@@ -2,17 +2,17 @@ package pixiv
 
 import (
 	"fmt"
+	"miraiGoDo/internal"
 	"strings"
 	"sync"
 	"time"
 
+	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/config"
+	"github.com/Logiase/MiraiGo-Template/utils"
 	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/spf13/viper"
-
-	"github.com/Logiase/MiraiGo-Template/bot"
-	"github.com/Logiase/MiraiGo-Template/utils"
 )
 
 func init() {
@@ -124,7 +124,7 @@ func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Se
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
 	t := time.Now()
 	date := fmt.Sprintf("%d-%02d-%02d", t.Year(), t.Month(), t.Day()-2)
-	rank := RequestJson(fmt.Sprintf(RankURL, date), GET)
+	rank := internal.RequestJson(fmt.Sprintf(RankURL, date), internal.GET)
 	if len(rank["illusts"].([]interface{})) > 0 {
 		for i, v := range rank["illusts"].([]interface{}) {
 			if i == 5 {
@@ -134,8 +134,8 @@ func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Se
 			p := fmt.Sprintf("PID:%1.0f", v.(map[string]interface{})["id"].(float64))
 			makes := fmt.Sprintf(t + "\n" + p + "\n")
 			ImgURL := v.(map[string]interface{})["image_urls"].(map[string]interface{})["large"].(string)
-			imgData := RequestImg(fmt.Sprintf(ImgDataURL, ImgURL), GET)
-			img := makeImage(imgData, client, event.GroupCode, Group)
+			imgData := internal.RequestImg(fmt.Sprintf(ImgDataURL, ImgURL), internal.GET)
+			img := internal.MakeImage(imgData, client, event.GroupCode, internal.Group)
 			sendMsg.Append(message.NewText(makes)).Append(img)
 		}
 	} else {
@@ -150,11 +150,11 @@ func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Se
 func ShowIllust(client *miraiGoCli.QQClient, event *message.GroupMessage, illustId string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
-	illust := RequestJson(fmt.Sprintf(IllustURL, illustId), GET)
+	illust := internal.RequestJson(fmt.Sprintf(IllustURL, illustId), internal.GET)
 	send := "作品ID:" + illust["data"].(map[string]interface{})["illust"].(string) + "\n标题:" + illust["data"].(map[string]interface{})["title"].(string) + "\n画师UID:" + illust["data"].(map[string]interface{})["user"].(map[string]interface{})["id"].(string)
 	imgURL := illust["data"].(map[string]interface{})["originals"].([]interface{})[0].(map[string]interface{})["url"].(string)
-	imgData := RequestImg(fmt.Sprintf(ImgDataURL, imgURL), GET)
-	img := makeImage(imgData, client, event.GroupCode, 1)
+	imgData := internal.RequestImg(fmt.Sprintf(ImgDataURL, imgURL), internal.GET)
+	img := internal.MakeImage(imgData, client, event.GroupCode, 1)
 	sendMsg.Append(message.NewText(send)).Append(img)
 	return sendMsg
 }
@@ -163,9 +163,9 @@ func ShowIllust(client *miraiGoCli.QQClient, event *message.GroupMessage, illust
 func ShowUser(client *miraiGoCli.QQClient, event *message.GroupMessage, userId string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
-	userInfo := RequestJson(fmt.Sprintf(UserURL, userId), GET)
-	imgData := RequestImg(fmt.Sprintf(ImgDataURL, userInfo["user"].(map[string]interface{})["profile_image_urls"].(map[string]interface{})["medium"].(string)), GET)
-	img := makeImage(imgData, client, event.GroupCode, 1)
+	userInfo := internal.RequestJson(fmt.Sprintf(UserURL, userId), internal.GET)
+	imgData := internal.RequestImg(fmt.Sprintf(ImgDataURL, userInfo["user"].(map[string]interface{})["profile_image_urls"].(map[string]interface{})["medium"].(string)), internal.GET)
+	img := internal.MakeImage(imgData, client, event.GroupCode, 1)
 
 	sendMsg.Append(message.NewText(fmt.Sprintf("画师ID:%s\n画师名称:%s", userId, userInfo["user"].(map[string]interface{})["name"].(string))))
 	sendMsg.Append(img)
@@ -178,12 +178,12 @@ func ShowUser(client *miraiGoCli.QQClient, event *message.GroupMessage, userId s
 // 涩图
 func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
-	illust := RequestJson(SetuURL, GET)
+	illust := internal.RequestJson(SetuURL, internal.GET)
 	illustID := illust["data"].([]interface{})[0].(map[string]interface{})["pid"]
 	original := illust["data"].([]interface{})[0].(map[string]interface{})["urls"].(map[string]interface{})["original"].(string)
 	sendMsg.Append(message.NewText(fmt.Sprintf("PID:%1.0f\n", illustID)))
-	imgData := RequestImg(original, GET)
-	img := makeImage(imgData, client, event.Sender.Uin, Private)
+	imgData := internal.RequestImg(original, internal.GET)
+	img := internal.MakeImage(imgData, client, event.Sender.Uin, internal.Private)
 	sendMsg.Append(img)
 	return sendMsg
 }
@@ -192,7 +192,7 @@ func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Sen
 func searchImg(client *miraiGoCli.QQClient, event *message.GroupMessage, url string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	fmt.Printf("URL: %v\n", fmt.Sprintf(searchImgURL, API_KEY, url))
-	responseJson := RequestJson(fmt.Sprintf(searchImgURL, API_KEY, url), GET)
+	responseJson := internal.RequestJson(fmt.Sprintf(searchImgURL, API_KEY, url), internal.GET)
 	//匹配度
 	similarity := responseJson["results"].([]interface{})[0].(map[string]interface{})["header"].(map[string]interface{})["similarity"].(string)
 	thumbnail := responseJson["results"].([]interface{})[0].(map[string]interface{})["header"].(map[string]interface{})["thumbnail"].(string)
@@ -200,7 +200,7 @@ func searchImg(client *miraiGoCli.QQClient, event *message.GroupMessage, url str
 	title := responseJson["results"].([]interface{})[0].(map[string]interface{})["data"].(map[string]interface{})["title"].(string)
 	//原图链接
 	ext_urls := responseJson["results"].([]interface{})[0].(map[string]interface{})["data"].(map[string]interface{})["ext_urls"].([]interface{})[0].(string)
-	img := makeImage(RequestImg(thumbnail, GET), client, event.GroupCode, Group)
+	img := internal.MakeImage(internal.RequestImg(thumbnail, internal.GET), client, event.GroupCode, internal.Group)
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n标题:" + title + "\n匹配度:" + similarity)).Append(img).Append(message.NewText("\n原图链接:" + ext_urls))
 	return sendMsg
 }
