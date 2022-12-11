@@ -10,7 +10,7 @@ import (
 	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/config"
 	"github.com/Logiase/MiraiGo-Template/utils"
-	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
+	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/spf13/viper"
 )
@@ -75,7 +75,7 @@ var instance *pixiv
 var pixivLogger = utils.GetModuleLogger("pixiv")
 
 func register(b *bot.Bot) {
-	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
+	b.GroupMessageEvent.Subscribe(func(client *client.QQClient, event *message.GroupMessage) {
 		//gruopCode := strconv.FormatInt(event.GroupCode, 10)
 		for _, v := range config.GlobalConfig.GetIntSlice("gruops") {
 			if int(event.GroupCode) == v {
@@ -119,7 +119,7 @@ func register(b *bot.Bot) {
 }
 
 // 每日排行 不是当日数据,延迟一天
-func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.SendingMessage {
+func Top50(client *client.QQClient, event *message.GroupMessage) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
 	t := time.Now()
@@ -147,7 +147,7 @@ func Top50(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Se
 }
 
 // 查看图片
-func ShowIllust(client *miraiGoCli.QQClient, event *message.GroupMessage, illustId string) *message.SendingMessage {
+func ShowIllust(client *client.QQClient, event *message.GroupMessage, illustId string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
 	illust := internal.RequestJson(fmt.Sprintf(IllustURL, illustId), internal.GET)
@@ -160,7 +160,7 @@ func ShowIllust(client *miraiGoCli.QQClient, event *message.GroupMessage, illust
 }
 
 // 查看作者
-func ShowUser(client *miraiGoCli.QQClient, event *message.GroupMessage, userId string) *message.SendingMessage {
+func ShowUser(client *client.QQClient, event *message.GroupMessage, userId string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n"))
 	userInfo := internal.RequestJson(fmt.Sprintf(UserURL, userId), internal.GET)
@@ -176,7 +176,7 @@ func ShowUser(client *miraiGoCli.QQClient, event *message.GroupMessage, userId s
 }
 
 // 涩图
-func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.SendingMessage {
+func setu(client *client.QQClient, event *message.GroupMessage) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	illust := internal.RequestJson(SetuURL, internal.GET)
 	illustID := illust["data"].([]interface{})[0].(map[string]interface{})["pid"]
@@ -189,7 +189,7 @@ func setu(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.Sen
 }
 
 // 以图搜图
-func searchImg(client *miraiGoCli.QQClient, event *message.GroupMessage, url string) *message.SendingMessage {
+func searchImg(client *client.QQClient, event *message.GroupMessage, url string) *message.SendingMessage {
 	sendMsg := message.NewSendingMessage()
 	fmt.Printf("URL: %v\n", fmt.Sprintf(searchImgURL, API_KEY, url))
 	responseJson := internal.RequestJson(fmt.Sprintf(searchImgURL, API_KEY, url), internal.GET)

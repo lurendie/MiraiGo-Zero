@@ -7,7 +7,7 @@ import (
 	"strings"
 	"sync"
 
-	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
+	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 	"github.com/spf13/viper"
 
@@ -71,7 +71,7 @@ var instance *wzry
 var wzryLogger = utils.GetModuleLogger("wzry")
 
 func register(b *bot.Bot) {
-	b.GroupMessageEvent.Subscribe(func(client *miraiGoCli.QQClient, event *message.GroupMessage) {
+	b.GroupMessageEvent.Subscribe(func(client *client.QQClient, event *message.GroupMessage) {
 		for _, v := range viper.GetIntSlice("gruops") {
 			if event.GroupCode == int64(v) {
 				if strings.HasPrefix(event.ToString(), "查询战力") {
@@ -86,7 +86,7 @@ func register(b *bot.Bot) {
 
 }
 
-func searchAtk(client *miraiGoCli.QQClient, event *message.GroupMessage) *message.SendingMessage {
+func searchAtk(client *client.QQClient, event *message.GroupMessage) *message.SendingMessage {
 	arr := strings.Split(event.ToString(), " ")
 	heroName := arr[1]
 	zone := getType(arr[2])

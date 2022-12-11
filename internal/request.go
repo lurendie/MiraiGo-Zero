@@ -9,7 +9,7 @@ import (
 	"net/url"
 
 	"github.com/Logiase/MiraiGo-Template/config"
-	miraiGoCli "github.com/Mrs4s/MiraiGo/client"
+	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
 )
 
@@ -68,7 +68,7 @@ func init() {
 }
 
 // 将图片数据上传QQ服务器并生成Message类型
-func MakeImage(read io.Reader, c *miraiGoCli.QQClient, groupCode int64, msgtype int) message.IMessageElement {
+func MakeImage(read io.Reader, c *client.QQClient, groupCode int64, msgtype int) message.IMessageElement {
 	imageData, e1 := io.ReadAll(read)
 	if e1 != nil {
 		fmt.Printf("e1: %v\n", e1)
