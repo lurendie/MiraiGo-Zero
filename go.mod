@@ -1,4 +1,4 @@
-module miraiGoDo
+module MiraiGo-Zero
 
 go 1.19
 

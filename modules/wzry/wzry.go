@@ -1,8 +1,8 @@
 package wzry
 
 import (
+	"MiraiGo-Zero/internal"
 	"fmt"
-	"miraiGoDo/internal"
 	"net/url"
 	"strings"
 	"sync"

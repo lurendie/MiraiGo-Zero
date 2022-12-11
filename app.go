@@ -4,9 +4,9 @@ import (
 	"os"
 	"os/signal"
 
-	_ "miraiGoDo/modules/master"
-	_ "miraiGoDo/modules/pixiv"
-	_ "miraiGoDo/modules/wzry"
+	_ "MiraiGo-Zero/modules/master"
+	_ "MiraiGo-Zero/modules/pixiv"
+	_ "MiraiGo-Zero/modules/wzry"
 
 	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/config"

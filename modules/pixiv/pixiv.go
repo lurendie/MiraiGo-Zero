@@ -1,8 +1,8 @@
 package pixiv
 
 import (
+	"MiraiGo-Zero/internal"
 	"fmt"
-	"miraiGoDo/internal"
 	"strings"
 	"sync"
 	"time"
@@ -135,7 +135,7 @@ func Top50(client *client.QQClient, event *message.GroupMessage) *message.Sendin
 			makes := fmt.Sprintf(t + "\n" + p + "\n")
 			ImgURL := v.(map[string]interface{})["image_urls"].(map[string]interface{})["large"].(string)
 			imgData := internal.RequestImg(fmt.Sprintf(ImgDataURL, ImgURL), internal.GET)
-			img := internal.MakeImage(imgData, client, event.GroupCode, internal.Group)
+			img := internal.MakeImage(imgData, client, event.GroupCode, internal.GROUP)
 			sendMsg.Append(message.NewText(makes)).Append(img)
 		}
 	} else {
@@ -183,7 +183,7 @@ func setu(client *client.QQClient, event *message.GroupMessage) *message.Sending
 	original := illust["data"].([]interface{})[0].(map[string]interface{})["urls"].(map[string]interface{})["original"].(string)
 	sendMsg.Append(message.NewText(fmt.Sprintf("PID:%1.0f\n", illustID)))
 	imgData := internal.RequestImg(original, internal.GET)
-	img := internal.MakeImage(imgData, client, event.Sender.Uin, internal.Private)
+	img := internal.MakeImage(imgData, client, event.Sender.Uin, internal.PRIVATE)
 	sendMsg.Append(img)
 	return sendMsg
 }
@@ -200,7 +200,7 @@ func searchImg(client *client.QQClient, event *message.GroupMessage, url string)
 	title := responseJson["results"].([]interface{})[0].(map[string]interface{})["data"].(map[string]interface{})["title"].(string)
 	//原图链接
 	ext_urls := responseJson["results"].([]interface{})[0].(map[string]interface{})["data"].(map[string]interface{})["ext_urls"].([]interface{})[0].(string)
-	img := internal.MakeImage(internal.RequestImg(thumbnail, internal.GET), client, event.GroupCode, internal.Group)
+	img := internal.MakeImage(internal.RequestImg(thumbnail, internal.GET), client, event.GroupCode, internal.GROUP)
 	sendMsg.Append(message.NewAt(event.Sender.Uin)).Append(message.NewText("\n标题:" + title + "\n匹配度:" + similarity)).Append(img).Append(message.NewText("\n原图链接:" + ext_urls))
 	return sendMsg
 }

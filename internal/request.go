@@ -16,17 +16,17 @@ import (
 var cli *http.Client
 
 const (
-	UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24"
-	POST      = "POST"
-	GET       = "GET"
-	Group     = 1
-	Private   = 0
+	USER_AGENT = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/107.0.0.0 Safari/537.36 Edg/107.0.1418.24"
+	POST       = "POST"
+	GET        = "GET"
+	PRIVATE    = iota
+	GROUP
 )
 
 // 根据图片URL返回图片二进制数据
 func RequestImg(url string, method string) io.ReadCloser {
 	req, _ := http.NewRequest(method, url, nil)
-	req.Header.Add("user-agent", UserAgent)
+	req.Header.Add("user-agent", USER_AGENT)
 	req.Header.Add("token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NDk3MDA0NTkiLCJ1dWlkIjoiNjMxYjE4MTIyZmZiNGE1OWI1ZmJjNTY2MDgzNmFkNWIiLCJpYXQiOjE2NTAxODA3NzEsImFjY291bnQiOiJ7XCJlbWFpbFwiOlwiNTQ5NzAwNDU5QHFxLmNvbVwiLFwiZ2VuZGVyXCI6LTEsXCJoYXNQcm9uXCI6MCxcImlkXCI6MTc4OCxcInBhc3NXb3JkXCI6XCI2N2JjZDAxZTNlYzc2MWY5ZjU2YzQyZDZkOTdkNGI1OFwiLFwic3RhdHVzXCI6MCxcInVzZXJOYW1lXCI6XCI1NDk3MDA0NTlcIn0iLCJqdGkiOiIxNzg4In0.nuuHLJeVCIfOg_1EEPHiL-nL8O82rCbxyI_PA4-QPBw")
 	resp, _ := cli.Do(req)
 	return resp.Body
@@ -35,7 +35,7 @@ func RequestImg(url string, method string) io.ReadCloser {
 // 根据JSON URL返回Map集合
 func RequestJson(url string, method string) map[string]interface{} {
 	req, _ := http.NewRequest(method, url, nil)
-	req.Header.Add("user-agent", UserAgent)
+	req.Header.Add("user-agent", USER_AGENT)
 	req.Header.Add("token", "eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiI1NDk3MDA0NTkiLCJ1dWlkIjoiNjMxYjE4MTIyZmZiNGE1OWI1ZmJjNTY2MDgzNmFkNWIiLCJpYXQiOjE2NTAxODA3NzEsImFjY291bnQiOiJ7XCJlbWFpbFwiOlwiNTQ5NzAwNDU5QHFxLmNvbVwiLFwiZ2VuZGVyXCI6LTEsXCJoYXNQcm9uXCI6MCxcImlkXCI6MTc4OCxcInBhc3NXb3JkXCI6XCI2N2JjZDAxZTNlYzc2MWY5ZjU2YzQyZDZkOTdkNGI1OFwiLFwic3RhdHVzXCI6MCxcInVzZXJOYW1lXCI6XCI1NDk3MDA0NTlcIn0iLCJqdGkiOiIxNzg4In0.nuuHLJeVCIfOg_1EEPHiL-nL8O82rCbxyI_PA4-QPBw")
 	resp, err := cli.Do(req)
 	if err != nil {
