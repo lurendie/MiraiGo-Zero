@@ -91,7 +91,7 @@ func searchAtk(client *client.QQClient, event *message.GroupMessage) *message.Se
 	heroName := arr[1]
 	zone := getType(arr[2])
 	m := message.NewSendingMessage()
-	URL := fmt.Sprintf(API_URL, token, url.QueryEscape(heroName), zone)
+	URL := fmt.Sprintf(API_URL, url.QueryEscape(heroName), zone, token)
 	fmt.Printf("url: %v\n", URL)
 	response := internal.RequestJson(URL, internal.GET)
 	fmt.Printf("response: %v\n", response)

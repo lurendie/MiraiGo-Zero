@@ -5,14 +5,14 @@ const (
 )
 
 var (
-	Zone = zone{"qq", "wx", "ios_qq", "ios_wx"}
-	API_URL  = "https://www.hive-net.cn/heropower/?token=%s&hero=%s&type=%s"
+	Zone    = zone{"aqq", "awx", "ios_qq", "ios_wx"}
+	API_URL = "https://www.hive-net.cn/funtools/heroPower/getPower?hero=%s&type=%s&token=%s"
 )
 
 type (
 	zone struct {
-		qq     string
-		wx     string
+		aqq    string
+		awx    string
 		ios_qq string
 		ios_wx string
 	}
