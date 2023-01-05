@@ -112,9 +112,9 @@ func searchAtk(client *client.QQClient, event *message.GroupMessage) *message.Se
 
 func getType(t string) string {
 	if t == "安卓QQ" {
-		return Zone.qq
+		return Zone.aqq
 	} else if t == "安卓WX" {
-		return Zone.wx
+		return Zone.awx
 	} else if t == "苹果QQ" {
 		return Zone.ios_qq
 	} else if t == "苹果WX" {
