@@ -76,7 +76,7 @@ func register(b *bot.Bot) {
 			if event.GroupCode == int64(v) {
 				if strings.HasPrefix(event.ToString(), "查询战力") {
 					wzryLogger.Info("查询战力触发")
-					m := searchAtk(client, event)
+					m := searchAtk(event)
 					client.SendGroupMessage(event.GroupCode, m)
 					return
 				}
@@ -86,7 +86,7 @@ func register(b *bot.Bot) {
 
 }
 
-func searchAtk(client *client.QQClient, event *message.GroupMessage) *message.SendingMessage {
+func searchAtk(event *message.GroupMessage) *message.SendingMessage {
 	arr := strings.Split(event.ToString(), " ")
 	heroName := arr[1]
 	zone := getType(arr[2])
