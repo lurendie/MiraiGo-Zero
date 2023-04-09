@@ -116,6 +116,8 @@ func register(b *bot.Bot) {
 		}
 	})
 }
+
+//删除切片元素
 func DeleteSlice(a []int64, elem int64) []int64 {
 	j := 0
 	for _, v := range a {

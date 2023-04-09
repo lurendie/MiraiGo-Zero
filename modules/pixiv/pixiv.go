@@ -12,7 +12,6 @@ import (
 	"github.com/Logiase/MiraiGo-Template/utils"
 	"github.com/Mrs4s/MiraiGo/client"
 	"github.com/Mrs4s/MiraiGo/message"
-	"github.com/spf13/viper"
 )
 
 func init() {
@@ -34,10 +33,6 @@ func (m *pixiv) Init() {
 	// 初始化过程
 	// 在此处可以进行 Module 的初始化配置
 	// 如配置读取
-	viper.SetConfigFile("application.yaml")
-	viper.SetConfigType("yaml")
-	viper.AddConfigPath(".")
-	viper.ReadInConfig()
 }
 
 func (m *pixiv) PostInit() {
