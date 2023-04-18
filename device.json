@@ -7,7 +7,7 @@
     "finger_print": "mamoe/mirai/mirai:10/MIRAI.200122.001/5864380:user/release-keys",
     "boot_id": "e7a730a3-dfc6-ded1-b474-27ee1834a5a7",
     "proc_version": "Linux version 3.0.31-pi2vE5Dw (android-build@lurendie.com)",
-    "protocol": 5,
+    "protocol": 2,
     "imei": "371346275627214",
     "brand": "mamoe",
     "bootloader": "unknown",

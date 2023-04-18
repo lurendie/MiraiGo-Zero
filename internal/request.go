@@ -50,9 +50,9 @@ func RequestJson(url string, method string) map[string]interface{} {
 	return j
 }
 
-func init() {
+func Init() {
 	//设置代理初始化请求头
-	if config.GlobalConfig.Get("proxy") == nil {
+	if config.GlobalConfig.GetString("proxy") == "" {
 		cli = &http.Client{Timeout: 0}
 	} else {
 		proxyURL, error := url.Parse(config.GlobalConfig.GetString("proxy"))

@@ -71,7 +71,6 @@ var pixivLogger = utils.GetModuleLogger("pixiv")
 
 func register(b *bot.Bot) {
 	b.GroupMessageEvent.Subscribe(func(client *client.QQClient, event *message.GroupMessage) {
-		//gruopCode := strconv.FormatInt(event.GroupCode, 10)
 		for _, v := range config.GlobalConfig.GetIntSlice("gruops") {
 			if int(event.GroupCode) == v {
 				if event.ToString() == "功能" {

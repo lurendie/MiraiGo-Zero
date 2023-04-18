@@ -4,6 +4,8 @@ import (
 	"os"
 	"os/signal"
 
+	"MiraiGo-Zero/internal"
+	_ "MiraiGo-Zero/modules/chat"
 	_ "MiraiGo-Zero/modules/master"
 	_ "MiraiGo-Zero/modules/pixiv"
 	_ "MiraiGo-Zero/modules/wzry"
@@ -17,6 +19,7 @@ import (
 func init() {
 	utils.WriteLogToFS(utils.LogInfoLevel, utils.LogWithStack, utils.LogDebugLevel)
 	config.Init()
+	internal.Init()
 }
 
 func main() {

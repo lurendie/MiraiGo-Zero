@@ -86,7 +86,7 @@ func Md5Crypt(str string, salt ...interface{}) (CryptStr string) {
 
 func randomStr() string {
 	CONSTANTS := "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
-	reStr := ""
+	var reStr string
 	var result *big.Int
 	for {
 		// 生成 10 个 [0, 128) 范围的真随机数。
