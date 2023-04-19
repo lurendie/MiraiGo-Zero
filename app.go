@@ -4,22 +4,22 @@ import (
 	"os"
 	"os/signal"
 
-	"MiraiGo-Zero/internal"
-	_ "MiraiGo-Zero/modules/chat"
-	_ "MiraiGo-Zero/modules/master"
-	_ "MiraiGo-Zero/modules/pixiv"
-	_ "MiraiGo-Zero/modules/wzry"
-
 	"github.com/Logiase/MiraiGo-Template/bot"
 	"github.com/Logiase/MiraiGo-Template/config"
-	_ "github.com/Logiase/MiraiGo-Template/modules/logging"
 	"github.com/Logiase/MiraiGo-Template/utils"
+
+	_ "MiraiGo-Zero/modules/chat"
+	// _ "MiraiGo-Zero/modules/master"
+	// _ "MiraiGo-Zero/modules/pixiv"
+	// _ "MiraiGo-Zero/modules/wzry"
+
+	_ "github.com/Logiase/MiraiGo-Template/modules/logging"
 )
 
 func init() {
 	utils.WriteLogToFS(utils.LogInfoLevel, utils.LogWithStack, utils.LogDebugLevel)
 	config.Init()
-	internal.Init()
+	//internal.Init()
 }
 
 func main() {
