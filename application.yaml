@@ -1,14 +1,13 @@
 # 配置机器人账号密码
 bot:
-    account: 279166698
-    password: qq200106
+    account: 
+    password: 
 gruops:
-    - 611374887
-master: 549700459
+master: 
 # 网络代理      
 proxy: http://127.0.0.1:10810
 # 模块开关 True开 Flase关
 modules:
   ChatGPT: 
-    start: true
-    APIKey: "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"
+    start: false
+    APIKey: ""
