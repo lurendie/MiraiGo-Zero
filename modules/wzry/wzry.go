@@ -109,7 +109,7 @@ func searchAtk(event *message.GroupMessage) *message.SendingMessage {
 	return m
 
 }
-
+//获取类型
 func getType(t string) string {
 	if t == "安卓QQ" {
 		return Zone.aqq
@@ -122,3 +122,6 @@ func getType(t string) string {
 	}
 	return ""
 }
+
+
+

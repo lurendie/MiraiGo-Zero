@@ -105,12 +105,12 @@ type GPTturbo struct {
 	Model    string     `json:"model"`
 	Messages []Messages `json:"messages"`
 }
-
+// GPT Messages
 type Messages struct {
 	Role    string `json:"role"`
 	Content string `json:"content"`
 }
-
+//GPT 响应对象
 type Response struct {
 	ID      string `json:"id"`
 	Object  string `json:"object"`
@@ -137,6 +137,7 @@ func ChatGPT(userMsg string) string {
 	apiKey := config.GlobalConfig.GetString("modules.ChatGPT.APIKey")
 	if apiKey == "" {
 		chatLogger.Error("GPT的APIKay是空,无法执行")
+		//执行panic 会导致程序退出
 		panic("GPT的APIKay是空,无法执行")
 	}
 	ms := append(make([]Messages, 0),
